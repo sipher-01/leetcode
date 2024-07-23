@@ -23,8 +23,8 @@ public:
         TreeNode* root = new TreeNode(postorder[postend]);
         int center = mp[root->val];
         int left = center - instart;
-        root->right = solve(inorder, center+1, inend, postorder, poststart+left,postend-1,mp);
         root->left = solve(inorder, instart, center-1, postorder, poststart,poststart+left-1,mp);
+        root->right = solve(inorder, center+1, inend, postorder, poststart+left,postend-1,mp);
         return root;
     }
 };
