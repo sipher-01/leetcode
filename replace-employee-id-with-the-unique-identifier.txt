@@ -1,0 +1,4 @@
+# Write your MySQL query statement below
+select eid.unique_id, emp.name 
+from Employees emp
+left join EmployeeUNI eid on emp.id = eid.id;
