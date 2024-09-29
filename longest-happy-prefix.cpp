@@ -19,7 +19,7 @@ public:
             }
         }
         int len = lcs[n-1];
-        if(len==n || len==0)return "";
+        if( len==0)return "";
         string prefix = s.substr(0,len);
         return prefix;
     }
