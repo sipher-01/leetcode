@@ -18,9 +18,17 @@ public:
     int maximumBeauty(vector<int>& nums, int k) {
         sort(nums.begin(),nums.end());
         int res = 0;
-        for(int i=0; i<nums.size(); i++){
-            int end = bs(nums,nums[i]+ 2*k);
-            res = max(res,end-i+1);
+        // for(int i=0; i<nums.size(); i++){
+        //     int end = bs(nums,nums[i]+ 2*k);
+        //     res = max(res,end-i+1);
+        // }
+        int i=0, j=0;
+        while(i<nums.size()){
+            while(j<nums.size() && nums[j]<= nums[i] + (2*k)){
+                j++;
+            }
+            res = max(res,j-i);
+            i++;
         }
         return res;
     }
