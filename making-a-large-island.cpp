@@ -1,90 +1,60 @@
-class Disjoint{
-public:
-    vector<int>size,parent;
-    Disjoint(int v){
-        size.resize(v+1,1);
-        parent.resize(v+1);
-        for(int i=0; i<=v; ++i){
-            parent[i] = i;
-        }
-    }
-    int findUparent(int x){
-        if(parent[x]==x)return x;
-        return parent[x] = findUparent(parent[x]);
-    }
-    
-    void unionBySize(int a,int b){
-        int pa = findUparent(a);
-        int pb = findUparent(b);
-        if(pa==pb)return ;
-        if(size[pa]>size[pb]){
-            parent[pb] = pa;
-            size[pa] += size[pb];
-        }
-        else{
-            parent[pa] = pb;
-            size[pb] += size[pa];
-        }
-    }
-};
-
 class Solution {
+    int n;
+    int r[4] = {-1,0,1,0};
+    int c[4] = {0,1,0,-1};
 public:
+    bool is_valid(int i, int j){
+        return i>=0 && i<n && j>=0 && j<n;
+    }
+    int DFS(vector<vector<int>>& grid,int i,int j,vector<vector<bool>>&visi,int id){
+        visi[i][j] = true;
+        grid[i][j] = id;
+        int s = 1;
+        for(int d=0; d<4; d++){
+            int nr = i + r[d];
+            int nc = j + c[d];
+            if(is_valid(nr,nc) && grid[nr][nc]==1 && !visi[nr][nc]){
+                s += DFS(grid,nr,nc,visi,id);
+            }
+        }
+        return s;
+    }
     int largestIsland(vector<vector<int>>& grid) {
-        int n = grid.size();
-        Disjoint ds(n*n);
+        int unq_id = 2;
+        unordered_map<int,int>mp;
+        n = grid.size();
+        vector<vector<bool>>visi(n,vector<bool>(n,false));
+        int island = 0;
         for(int i=0; i<n; i++){
-            for(int j=0; j<n; ++j)
-            {
-                int r[] = {1,0,-1,0};
-                int c[] = {0,1,0,-1};
-                if(grid[i][j]==1){
+            for(int j=0; j<n; j++){
+                if(!visi[i][j] && grid[i][j]==1){
+                    int s = DFS(grid,i,j,visi,unq_id);
+                    mp[unq_id] = s;
+                    island = max(island,s);
+                    unq_id++;
+                }
+            }
+        }
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                if(grid[i][j] == 0){
+                    int largest = 1;
+                    unordered_set<int>st;
                     for(int k=0; k<4; k++){
-                        int adjr = i + r[k];
-                        int adjc = j + c[k];
-                        if(adjr>=0 && adjr<n && adjc>=0 && adjc<n &&
-                         grid[adjr][adjc]==1){
-                            int node1= i*n + j;
-                            int node2 = adjr*n +adjc;
-                            if(ds.findUparent(node1) != 
-                            ds.findUparent(node2)){
-                                ds.unionBySize(node1,node2);
-                            }
+                        int nr = i + r[k];
+                        int nc = j + c[k];
+                        if(is_valid(nr,nc) && grid[nr][nc]>0 ){
+                            st.insert(grid[nr][nc]);
                         }
                     }
-                }
-                else continue;
-            }
-        }
-
-        int m =0;
-        for(int i=0; i<n; i++){
-            for(int j=0; j<n; ++j)
-            {
-                if(grid[i][j]==1)continue;
-                int r[] = {1,0,-1,0};
-                int c[] = {0,1,0,-1};
-                set<int>comp;
-                for(int k=0; k<4; k++){
-                    int adjr = i + r[k];
-                    int adjc = j + c[k];
-                    if(adjr>=0 && adjr<n && adjc>=0 && adjc<n && grid[adjr][adjc]==1){
-                        int node = adjr*n+adjc;
-                        comp.insert(ds.findUparent(node));
+                    for(auto it: st){
+                        largest += mp[it];
                     }
-
-                }     
-                int maxsize=0;
-                for(auto it:comp){
-                    maxsize += ds.size[it];
+                    island = max(island,largest);
                 }
-                m= max(maxsize+1,m);
             }
         }
-        for(int i=0; i<n*n; i++){
-            m = max(m,ds.size[ds.findUparent(i)]);
-        }
-        return m;
-        
+
+        return island;
     }
 };
