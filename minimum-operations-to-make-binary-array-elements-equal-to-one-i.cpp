@@ -3,21 +3,18 @@ public:
     int minOperations(vector<int>& nums) {
         int op = 0;
         int n = nums.size();
-        for(int i=0; i<n; i++){
-            if(nums[i]==0){
-                if(i+2>=n)break;
-                int k = 0;
+       for (int i = 2; i < nums.size(); i++) {
+            // only looking forward to the last element
+            if (nums[i - 2] == 0) {
                 op++;
-                while(i+k<n && k<3){
-                    nums[i+k] ^= 1;
-                    k++; 
-                }
+                // flip i-2 and i-1 and i
+                nums[i - 2] ^= 1;
+                nums[i - 1] ^= 1;
+                nums[i] ^= 1;
             }
         }
-        for(int i=0; i<n; i++){
-            if(nums[i]==0)return -1;
-            cout<<nums[i]<<" ";
-        }
-        return op;
+        int sum = accumulate(nums.begin(), nums.end(), 0);
+        if (sum == nums.size()) return op;
+        return -1;
     }
 };
