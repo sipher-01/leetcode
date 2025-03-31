@@ -4,29 +4,22 @@ public:
     long long putMarbles(vector<int>& weights, int k) {
         ll n = weights.size();
         if(n==k || k==1)return 0;
-        // priority_queue<int>pq;
-        vector<ll>pq;
-        for(int i=1; i<n; i++){
-            pq.push_back(weights[i]+weights[i-1]);
+        priority_queue<ll> maxHeap;  // Max-heap for largest k-1 elements
+        priority_queue<ll, vector<ll>, greater<ll>> minHeap; // Min-heap for smallest k-1 elements
+
+        for (int i = 1; i < n; i++) {
+            ll sum = weights[i] + weights[i - 1];
+            maxHeap.push(sum);
+            minHeap.push(sum);
         }
-        sort(pq.begin(),pq.end());
-        ll maxSum = 0, minSum = 0;
+
+        ll minSum = 0, maxSum = 0;
+        
         for (int i = 0; i < k - 1; i++) {
-            minSum += pq[i];                          // Smallest k-1 sums
-            maxSum += pq[n - 2 - i];                  // Largest k-1 sums
+            minSum += minHeap.top(); minHeap.pop(); 
+            maxSum += maxHeap.top(); maxHeap.pop();
         }
 
         return maxSum - minSum;
-        // int maxSum = 0;
-        // int l = k-1;
-        // while(l--){
-        //     int val = pq.top();
-        //     pq.pop();
-        //     maxSum += val;
-        // }
-        // while(pq.size()>k-1){
-        //     pq.pop();
-        // }
-        // while(!pq.empty())
     }   
 };
