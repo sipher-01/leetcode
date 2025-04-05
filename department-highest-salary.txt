@@ -1,9 +1,17 @@
 # Write your MySQL query statement below
-select d.name as Department, e.name as Employee, e.salary as Salary
-from Employee e
-join Department d on e.departmentId = d.id
-where (e.departmentId,e.salary) in (
-    select departmentId,max(salary)
-    from Employee
-    group by departmentId
-);
+with ranked_salary as(
+    select d.name as Department, e.name as Employee, e.salary as Salary , dense_rank() over (partition by e.departmentId order by e.salary desc) as rn
+    from Employee e
+    join department d on e.departmentId = d.id
+)
+-- select d.name as Department, e.name as Employee, e.salary as Salary
+-- from Employee e
+-- join Department d on e.departmentId = d.id
+-- where (e.departmentId,e.salary) in (
+--     select departmentId,max(salary)
+--     from Employee
+--     group by departmentId
+-- );
+select Department, Employee, Salary
+from ranked_salary
+where rn = 1;
