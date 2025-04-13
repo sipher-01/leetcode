@@ -31,6 +31,10 @@ public:
             sort(full.begin(),full.end());
             st.insert(full);
         }
+        vector<long long>fact(11,1);
+        for(int i=1; i<11; i++){
+            fact[i] = fact[i-1]*i;
+        }
         long long ans = 0;
         for(string s: st){
             vector<int>mp(10,0);
@@ -39,9 +43,9 @@ public:
             }
             int total = s.length();
             int nonZero = s.length() - mp[0];
-            long long perm = nonZero * fact(total-1);
+            long long perm = nonZero * fact[total-1];
             for(int i=0; i<10; i++){
-                perm /= fact(mp[i]);
+                perm /= fact[mp[i]];
             }
             ans += perm;
         }
