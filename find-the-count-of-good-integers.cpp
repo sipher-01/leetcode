@@ -36,9 +36,9 @@ public:
             fact[i] = fact[i-1]*i;
         }
         long long ans = 0;
-        for(string s: st){
+        for(const string &s: st){
             vector<int>mp(10,0);
-            for(char &c: s){
+            for(const char &c: s){
                 mp[c-'0']++;
             }
             int total = s.length();
