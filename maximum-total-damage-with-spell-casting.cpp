@@ -17,7 +17,8 @@ public:
         ll mx = 0;
 
         for(int i=1,j=1; i<n; i++){
-            // int j=1; 
+            // int j=1; it gives tle so only move forward never reset j
+            
             while(j<i && f[j].first < f[i].first-2){
                 mx = max(mx,dp[j]);
                 j++;
