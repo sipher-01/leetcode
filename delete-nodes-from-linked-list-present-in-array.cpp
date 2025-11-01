@@ -11,21 +11,23 @@
 class Solution {
 public:
     ListNode* modifiedList(vector<int>& nums, ListNode* head) {
-        set<int>s;
-        for(auto it: nums){
-            s.insert(it);
-        }
-        ListNode* newHead = new ListNode(-1);
+        multiset<int>st;
+        for(int i=0; i<nums.size(); i++)st.insert(nums[i]);
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
         ListNode* temp = head;
-        ListNode* temp1 = newHead;
-        while(temp!=nullptr){
-            if(s.find(temp->val)==s.end()){
-                temp1->next = temp;
-                temp1 = temp;
+        ListNode* prev = dummy;
+        while(temp!=NULL){
+            if(st.find(temp->val)!=st.end()){
+                prev->next = temp->next;
             }
-                temp = temp->next;
+            else{
+                prev = temp;
+            }
+            temp = temp->next;
         }
-        temp1->next = nullptr;
-        return newHead->next;
+
+        return dummy->next;
+
     }
 };
