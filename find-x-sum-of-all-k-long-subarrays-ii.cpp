@@ -15,12 +15,12 @@ public:
                 rest.erase(it);
             }
 
-            while((int)top.size()>x){
-                auto it = top.begin();
-                sum -= 1LL * it->first * it->second;
-                rest.insert(*it);
-                top.erase(it);
-            }
+            // while((int)top.size()>x){
+            //     auto it = top.begin();
+            //     sum -= 1LL * it->first * it->second;
+            //     rest.insert(*it);
+            //     top.erase(it);
+            // }
 
             while(!top.empty() && !rest.empty() && *prev(rest.end()) > *top.begin()){
                 auto it1 = prev(rest.end());
