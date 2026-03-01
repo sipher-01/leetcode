@@ -1,34 +1,51 @@
 class Solution {
 public:
     int minOperations(string s, int k) {
-        int n = s.size(), m = 0;
-        vector<int> dist(n + 1, INT_MAX);
-        vector<set<int>> nodeSets(2);
-        for (int i = 0; i <= n; i++) {
-            nodeSets[i % 2].insert(i);
-            if (i < n && s[i] == '0') {
-                m++;
+        set<int>odd;
+        set<int>even;
+        int n = s.length();
+        int z = 0;
+
+        for(char &c: s){
+            if(c=='0')z += 1;
+        }
+        if(z==0)return 0;
+        
+        for(int i=0; i<n; i++){
+            if(i%2){
+                odd.insert(i);
+            }else{
+                even.insert(i);
             }
         }
-        queue<int> q;
-        q.push(m);
-        dist[m] = 0;
-        nodeSets[m % 2].erase(m);
-        while (!q.empty()) {
-            m = q.front();
+
+        queue<int>q;
+        q.push(z);
+        vector<int>op(n+1,-1);
+        op[z] = 0;
+        if(z%2==0){
+            even.erase(z);
+        }else{
+            odd.erase(z);
+        }
+        while(!q.empty()){
+            int state = q.front();
             q.pop();
-            int c1 = max(k - n + m, 0), c2 = min(m, k);
-            int lnode = m + k - 2 * c2, rnode = m + k - 2 * c1;
-            auto& nodeSet = nodeSets[lnode % 2];
-            for (auto iter = nodeSet.lower_bound(lnode);
-                 iter != nodeSet.end() && *iter <= rnode;) {
-                int m2 = *iter;
-                dist[m2] = dist[m] + 1;
-                q.push(m2);
-                iter = next(iter);
-                nodeSet.erase(m2);
+            int minF = max(0,k-n+state);
+            int maxF = min(k,state);
+            int maxZ = state + k - (2*minF);
+            int minZ = state + k - (2*maxF);
+            auto &curr = minZ%2==0?even:odd;
+            auto it = curr.lower_bound(minZ);
+            while(it!=curr.end() && *it<=maxZ){
+                if(op[*it]==-1){
+                    op[*it] = op[state] + 1;
+                }
+                if(*it == 0)return op[0];
+                q.push(*it);
+                it = curr.erase(it);
             }
         }
-        return dist[0] == INT_MAX ? -1 : dist[0];
+        return -1;
     }
 };
