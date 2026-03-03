@@ -1,28 +1,30 @@
 class Solution {
-    char res;
+    vector<string>s = vector<string>(21,"0");
 public:
-    string invert(string s){
-        string temp;
-        for(int i=0; i<s.size(); i++){
-            if (s[i] == '0') temp += '1';
-            else temp += '0';
+    string invert(string &a){
+        string temp = "";
+        int i = a.length()-1;
+        while(i>=0){
+            if(a[i]=='1'){
+                temp += '0';
+            }else{
+                temp += '1';
+            }
+            i--;
         }
         return temp;
     }
-    void solve(int i,int n, int k,string s){
-        if((s.length()/2)>=k){
-            res = s[k-1];
-            return ;
+    void cal(){
+        for(int i=2; i<=20; i++){
+            string temp = s[i-1];
+            string a = invert(s[i-1]);
+            // reverse(a.begin(),a.end());
+            temp += "1" + a;
+            s[i] = temp;
         }
-        if(i==n)return;
-            string temp = invert(s);
-            reverse(temp.begin(),temp.end());
-            s = s + "1" + temp;
-            solve(i+1,n,k,s);
     }
     char findKthBit(int n, int k) {
-        string s = "0"; 
-        solve(0,n,k,s);
-        return res;
+        cal();
+        return s[n][k-1];
     }
 };
