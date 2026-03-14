@@ -1,33 +1,35 @@
 class Solution {
 public:
-    bool check(char a, char b){
-        return a!=b;
+    string getHappyString(int n, int k) {
+        string currentString = "";
+        vector<string> happyStrings;
+        // Generate all happy strings of length n
+        generateHappyStrings(n, currentString, happyStrings);
+
+        // Check if there are at least k happy strings
+        if (happyStrings.size() < k) return "";
+
+        return happyStrings[k - 1];
     }
-    void solve(int i, int n, string temp,char prev,int &cnt, string&res, int k){
-        if(cnt>=k)return;
-        if(i==n){
-            cnt++;
-            if(cnt==k){
-                res = temp;
-            }
+
+private:
+    void generateHappyStrings(int n, string currentString,
+                              vector<string> &happyStrings) {
+        // If the current string has reached the desired length, add it to the
+        // list
+        if (currentString.size() == n) {
+            happyStrings.push_back(currentString);
             return;
         }
-        for(char c='a'; c<='c'; c++){
-            if(check(c,prev)){
-                solve(i+1,n,temp+c,c,cnt,res,k);
-            }
+
+        // Try adding each character ('a', 'b', 'c') to the current string
+        for (char currentChar = 'a'; currentChar <= 'c'; currentChar++) {
+            // Skip if the current character is the same as the last character
+            if (currentString.size() > 0 && currentString.back() == currentChar)
+                continue;
+
+            // Recursively generate the next character
+            generateHappyStrings(n, currentString + currentChar, happyStrings);
         }
-        return;
-    }
-    string getHappyString(int n, int k) {
-        // vector<string>happy_strings;
-        int cnt = 0;
-        string res = "";
-        for(char c='a'; c<='c'; c++){
-            string temp(1,c);
-            solve(1,n,temp,c,cnt,res,k);
-            if(!res.empty())return res;
-        }
-        return "";
     }
 };
