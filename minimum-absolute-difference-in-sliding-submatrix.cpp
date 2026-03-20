@@ -13,7 +13,6 @@ public:
             for(int j=0; j<m; j++){
                 int nn = i + k;
                 int nm = j + k;
-                cout<<nn<<" "<<nm<<endl;
                 if(nn<=n && nm<=m){
                     set<int>st;
                     for(int k = i; k<nn; k++){
@@ -27,7 +26,6 @@ public:
                         int second = *prev(it);
                         mini = min(mini, abs(second - first));
                     }
-                    cout<<"mini : "<<mini<<endl;
                     if(mini == INT_MAX) mini = 0;
                     temp.push_back(mini);
                 }
