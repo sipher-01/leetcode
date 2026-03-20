@@ -2,8 +2,8 @@ class Solution {
 
 public:
     vector<vector<int>> minAbsDiff(vector<vector<int>>& grid, int k) {
-        ios::sync_with_stdio(false);
-        cin.tie(NULL);
+        // ios::sync_with_stdio(false);
+        // cin.tie(NULL);
         vector<vector<int>>ans;
         int n = grid.size();
         int m = grid[0].size();
