@@ -15,7 +15,7 @@ public:
             b /= 2;
         }
 
-        return res;
+        return res%mod;
     }
     int xorAfterQueries(vector<int>& nums, vector<vector<int>>& queries) {
         int n = nums.size();
