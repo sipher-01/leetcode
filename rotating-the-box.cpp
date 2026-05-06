@@ -1,33 +1,23 @@
 class Solution {
 public:
-    vector<vector<char>> rotateTheBox(vector<vector<char>>& box) {
-        int n = box.size();
-        int m = box[0].size();
-        vector<vector<char>> res(m,vector<char>(n,'.'));
-        for(int i=0; i<n; i++){
-            for(int j=0; j<m; j++){
-                res[j][i] = box[i][j];
+    vector<vector<char>> rotateTheBox(vector<vector<char>>& grid) {
+        int rows = grid.size(), cols = grid[0].size();
+        for (int r = 0; r < rows; r++) {
+            int p = 0;
+            for (int c = 0; c < cols; c++) {
+                if (grid[r][c] == '.') {
+                    swap(grid[r][c], grid[r][p]);
+                    p++;
+                } else if (grid[r][c] == '*')
+                    p = c + 1;
             }
         }
-        for(auto &row: res){
-            reverse(row.begin(),row.end());
-        }
-
-        for(int i=0; i<n; i++){
-            int stone = m-1;
-            for(int j=m-1; j>=0; j--){
-                if(res[j][i]=='*'){
-                    stone = j-1;
-                    continue;
-                }
-                if(res[j][i]=='#'){
-                    res[j][i] = '.';
-                    res[stone][i] = '#';
-                    stone--;
-                }
-            }
-        }
-
+        
+        vector<vector<char>> res(cols, vector<char>(rows));
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < cols; c++)
+                res[c][rows - 1 - r] = grid[r][c];
+                
         return res;
     }
 };
