@@ -39,7 +39,7 @@ public:
 
                 if(cst < limit) continue;
 
-                if(nxtNode != n-1 && !online[nxtNode]) continue;
+                if(!online[nxtNode]) continue;
 
                 dist[nxtNode] = min(dist[nxtNode], dist[node] + cst);
             }
