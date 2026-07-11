@@ -1,37 +1,45 @@
 class Solution {
 public:
-    void dfs(int i, unordered_map<int,vector<int>>&adj, int &nodes, int &edges,vector<bool>&visi){
-        visi[i] = true;
-        nodes+=1;
-        for(auto it: adj[i]){
-            edges+=1;
-            if(!visi[it]){
-                dfs(it,adj,nodes,edges,visi);
-            }
-        }
-    }
     int countCompleteComponents(int n, vector<vector<int>>& edges) {
-        unordered_map<int,vector<int>>adj;
+        // adjacency lists for each vertex
+        vector<vector<int>> graph(n);
+        // map to store frequency of each unique adjacency list
+        unordered_map<string, int> componentFreq;
 
-        for(auto it: edges){
-            int u = it[0];
-            int v = it[1];
-            adj[u].push_back(v);
-            adj[v].push_back(u);
+        // initialize adjacency lists with self-loops
+        for (int vertex = 0; vertex < n; vertex++) {
+            graph[vertex].push_back(vertex);
         }
 
-        vector<bool>visited(n,false);
-        int ans = 0;
-        for(int i=0; i<n; i++){
-            int nodes = 0, edges=0;
-            if(!visited[i]){
-                dfs(i,adj,nodes,edges,visited);
-                if(edges/2 == (nodes*(nodes-1))/2){
-                    ans++;
-                }
+        // build adjacency lists from edges
+        for (const auto& edge : edges) {
+            graph[edge[0]].push_back(edge[1]);
+            graph[edge[1]].push_back(edge[0]);
+        }
+
+        // count frequency of each unique adjacency pattern
+        for (int vertex = 0; vertex < n; vertex++) {
+            vector<int> neighbors = graph[vertex];
+            sort(neighbors.begin(), neighbors.end());
+
+            // convert vector to string for hashing
+            string key;
+            for (int num : neighbors) {
+                key += to_string(num) + ",";
+            }
+            componentFreq[key]++;
+        }
+
+        // count complete components where size equals frequency
+        int completeCount = 0;
+        for (const auto& entry : componentFreq) {
+            // count commas to get original vector size
+            int size = count(entry.first.begin(), entry.first.end(), ',');
+            if (size == entry.second) {
+                completeCount++;
             }
         }
 
-        return ans;
+        return completeCount;
     }
 };
