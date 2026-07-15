@@ -35,8 +35,37 @@ public:
     }
     int subsequencePairCount(vector<int>& nums) {
         n = nums.size();
-        memset(dp,-1,sizeof(dp));
-        int ans = solve(0,0,0,nums);
-        return ans;
+        // int ans = solve(0,0,0,nums);
+        // return ans;
+        int mx = *max_element(nums.begin(),nums.end());
+        // int dp[n+1][mx+1][mx+1] = {0};
+        std::vector<std::vector<std::vector<int>>> dp(n + 1, 
+            std::vector<std::vector<int>>(mx + 1, std::vector<int>(mx + 1, 0)));
+        // memset(dp,0,sizeof(dp));
+        // base case
+        for(int i=1; i<=mx; i++){
+            // for(int j=1; j<mx)
+            dp[n][i][i] = 1;
+        }
+
+        for(int i=n-1; i>=0; i--){
+            for(int first = mx; first>=0; first--){
+                for(int second=mx; second>=0; second--){
+                    //skip
+                    dp[i][first][second] = (dp[i][first][second] + dp[i+1][first][second])%mod;
+
+                    //add seq1
+                    int new_first = GCD(first,nums[i]);
+                    dp[i][first][second] = (dp[i][first][second] + dp[i+1][new_first][second])%mod;
+
+                    //add seq2
+                    int new_second = GCD(second,nums[i]);
+                    dp[i][first][second] = (dp[i][first][second] + dp[i+1][first][new_second])%mod;
+
+                }
+            }
+        }
+        return dp[0][0][0];
+
     }
 };
